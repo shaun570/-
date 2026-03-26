@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 助手</title>
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; width: 100%; background: #f0f2f5; }
+        
+        /* 关键调整：限制容器在PC端的大小，并居中 */
+        #chat-container {
+            width: 100%;
+            height: 100%;
+            max-width: 1000px; /* PC端限制宽度 */
+            margin: 0 auto;    /* 居中 */
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            #chat-container { max-width: 100%; box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="chat-container"></div>
+
+<script src="https://lf-cdn.coze.cn/obj/unpkg/flow-platform/chat-app-sdk/1.2.0-beta.19/libs/cn/index.js"></script>
+
+<script>
+    // 1. 强制会话隔离：每次刷新页面，生成一个新的时间戳ID
+    // 只要 user_id 变了，Coze 就会建立一个全新的会话窗口
+    const uniqueUserId = 'user_' + Date.now(); 
+    
+    // 2. 初始化 SDK
+    const client = new CozeWebSDK.WebChatClient({
+        container: '#chat-container', // 挂载到 div
+        config: {
+            bot_id: '7617022638862647305',
+        },
+        auth: {
+            type: 'token',
+            token: 'pat_H8S9m4UBXjX8liUls5Zn8JXcOyPMYEd9mM53HT4s7q6LObVmkeRveZwOc1ZERXpz',
+            onRefreshToken: async () => 'pat_H8S9m4UBXjX8liUls5Zn8JXcOyPMYEd9mM53HT4s7q6LObVmkeRveZwOc1ZERXpz'
+        },
+        userInfo: {
+            id: uniqueUserId, // 使用唯一 ID 确保是新对话
+        },
+        ui: {
+            asstBtn: { isNeed: false }, // 隐藏悬浮球
+            sidebar: { isNeed: false }  // 可选：隐藏侧边历史记录，更像单次对话
+        }
+    });
+
+    // 自动打开聊天框
+    client.showChatBot();
+</script>
+</body>
+</html>
